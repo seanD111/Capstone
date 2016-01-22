@@ -1,11 +1,16 @@
-function [ soundClips, soundClips_count, languages, languages_count ] = getFileInfo( directory )
+function [ clipInfos ] = getFileInfo( directory )
 %getFileInfo Fetches the information of each sound clip in the given
 %directory
 %   getFileInfo goes into each directory (which are named based on
 %   language), and creates a structure containing the relative directory to
 %   each file and names the phrase based on its title information.
+%   The function returns the entire structure containing the soundclips,
+%   its length, the languages of the soundclips, and how many languages
+%   there are in total.
 %   Directory must have foldernames that start with three letter language
-%   tags (ie 'fra', 'eng', or 'ukr'). Example: directory/fra/flac/*.flac
+%   tags (ie 'fra', 'eng', or 'ukr').
+%Example: soundclips stored in: directory/fra/flac/*.flac
+%   [soundClips, soundClips_count, languages, languages_count ] =  getFileInfo('SoundClips')
 
 list = dir(strcat(directory, '/*')); % reading all the files one by one .
 clipsStruct=struct('name', [], 'phrase', [], 'phraseId', [], 'language', [], 'languageId', []);
@@ -47,8 +52,7 @@ for i = 1:length(clipsStruct)
         clipsStruct(i).phrase = info.Title;
     end
 end 
-soundClips=clipsStruct;
-soundClips_count=clipsStructEnd;
 
+clipInfos={clipsStruct, clipsStructEnd-1, languages, languages_count};
 end
 
