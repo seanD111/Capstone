@@ -1,6 +1,13 @@
-clear variables;
+function [ soundClips, soundClips_count, languages, languages_count ] = getFileInfo( directory )
+%getFileInfo Fetches the information of each sound clip in the given
+%directory
+%   getFileInfo goes into each directory (which are named based on
+%   language), and creates a structure containing the relative directory to
+%   each file and names the phrase based on its title information.
+%   Directory must have foldernames that start with three letter language
+%   tags (ie 'fra', 'eng', or 'ukr'). Example: directory/fra/flac/*.flac
 
-list = dir('Soundclips/*'); % reading all the files one by one .
+list = dir(strcat(directory, '/*')); % reading all the files one by one .
 clipsStruct=struct('name', [], 'phrase', [], 'phraseId', [], 'language', [], 'languageId', []);
 clipsStruct(4000, 1).name=[];
 clipsStructEnd=1;
@@ -20,10 +27,10 @@ for i = 1:length(list)
             langId=length(languages);
         end
         
-        clipsList=dir(strcat('Soundclips/', list(i).name, '/', 'flac/*.flac'))
+        clipsList=dir(strcat(directory, '/', list(i).name, '/', 'flac/*.flac'))
         for j=1:length(clipsList)
 
-            clipsStruct(clipsStructEnd, 1).name=strcat('Soundclips/', list(i).name, '/', 'flac/',clipsList(j).name);
+            clipsStruct(clipsStructEnd, 1).name=strcat(directory, '/', list(i).name, '/', 'flac/',clipsList(j).name);
             clipsStruct(clipsStructEnd, 1).phraseId=languages_count(langId, 1);
             clipsStruct(clipsStructEnd, 1).language=lang;
             clipsStruct(clipsStructEnd, 1).languageId=langId;
@@ -40,5 +47,8 @@ for i = 1:length(clipsStruct)
         clipsStruct(i).phrase = info.Title;
     end
 end 
+soundClips=clipsStruct;
+soundClips_count=clipsStructEnd;
 
-save('clipInfos', 'clipsStruct', 'clipsStructEnd', 'languages', 'languages_count')
+end
+
