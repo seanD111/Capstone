@@ -35,6 +35,35 @@ for i=1:length(corpusList)
 
 end
 
+colnames={'Speech File Count', 'Include In Analysis'};
+colformat = {'numeric','logical'};
+rowcount=0;
+for i=1:length(corpusList)
+    rowcount=rowcount+1+corpusList(i).langCount;
+    
+end
+rownames=cell(1, rowcount);
+rowdata=cell(rowcount, 2);
+rowend=1;
+for i=1:length(corpusList)
+    rownames(rowend)={corpusList(i).name};
+    rowColors(rowend, :)=[0.9 0.9 0.9];
+    rowdata(rowend, :)={sum(corpusList(i).clipCount) true};
+    rowend=rowend+1;
+    for j=1:corpusList(i).langCount
+        rownames(rowend)=corpusList(i).languages(j);
+        rowColors(rowend, :)=[1 1 1];
+        rowdata(rowend, :)={corpusList(i).clipCount(j) true};
+        rowend=rowend+1;
+    end
+
+end
+
+tableHandle.ColumnName=colnames;
+tableHandle.RowName=rownames;
+tableHandle.Data=rowdata;
+tableHandle.ColumnEditable=[false true];
+tableHandle.BackgroundColor=rowColors;
 
 end
 
