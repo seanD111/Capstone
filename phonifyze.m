@@ -22,7 +22,7 @@ function varargout = phonifyze(varargin)
 
 % Edit the above text to modify the response to help phonifyze
 
-% Last Modified by GUIDE v2.5 08-Mar-2016 22:12:29
+% Last Modified by GUIDE v2.5 08-Apr-2016 16:30:17
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -62,23 +62,89 @@ handles.dataSelect=uipanel('Parent', handles.tab1, 'Position', [0 0 1 1], 'units
 handles.anaSelect=uipanel('Parent', handles.tab2, 'Position', [0 0 1 1], 'units', 'normalized', 'BorderType', 'none');
 handles.predictSelect=uipanel('Parent', handles.tab3, 'Position', [0 0 1 1], 'units', 'normalized', 'BorderType', 'none');
 
-%Creating panels for selecting audio files, and a button to refresh the
-%directories
-%handles.corpusSelect = uitable('Parent', handles.dataSelect, 'Position', [0.05 0.55 0.4 0.4], 'units', 'normalized', 'Title', 'Corpus Selection');
-%handles.phonemeSelect = uitable('Parent', handles.dataSelect, 'Position', [0.05 0.15 0.4 0.4], 'units', 'normalized', 'Title', 'Phoneme Selection');
-handles.corpusSelect = uitable('Parent', handles.dataSelect, 'Position', [0.05 0.55 0.55 0.4], 'units', 'normalized');
-handles.phonemeSelect = uitable('Parent', handles.dataSelect, 'Position', [0.05 0.15 0.55 0.4], 'units', 'normalized');
-handles.directoryRefresh = uicontrol('Parent', handles.dataSelect, 'Style', 'pushbutton', 'String', 'Refresh', 'units', 'normalized','Position', [0.125 0.025 0.25 0.1], 'Callback', {@directoryRefresh_Callback, handles}); 
+%%Data Selection tab %%
+    %Creating panels for selecting audio files, and a button to refresh the
+    %directories
+    handles.corpusSelect = uitable('Parent', handles.dataSelect, 'Position', [0.05 0.55 0.55 0.4], 'units', 'normalized');
+    handles.phonemeSelect = uitable('Parent', handles.dataSelect, 'Position', [0.05 0.15 0.55 0.4], 'units', 'normalized');
+    handles.directoryRefresh = uicontrol('Parent', handles.dataSelect, 'Style', 'pushbutton', 'String', 'Refresh', 'units', 'normalized','Position', [0.185 0.025 0.25 0.1], 'Callback', {@directoryRefresh_Callback, handles}); 
 
-refreshCorpusTable(handles.corpusSelect);
-refreshPhonemeTable(handles.phonemeSelect);
-handles.corpusSelect.Position=[0.05 0.55 0.55 0.4];
-handles.phonemeSelect.Position=[0.1 0.25 0.45 0.2];
+    %refresh the tables and their dimensions
+    [handles.allFilesByRow, handles.allLanguages]=refreshCorpusTable(handles.corpusSelect);
+    refreshPhonemeTable(handles.phonemeSelect);
+    handles.corpusSelect.Position=[0.05 0.55 0.55 0.4];
+    handles.phonemeSelect.Position=[0.1 0.25 0.45 0.2];
+
+%%Analys Selection tab %%
+
+    %selection details
+    handles.anaDetails= uicontrol('Parent', handles.anaSelect,'Style','text', ...
+        'String','Frequency Domain Analysis', 'units', 'normalized');
+
+
+    %Time domain list
+    handles.timeDomain=uicontrol('Parent', handles.anaSelect,'Style','listbox', 'units', 'normalized');
+    handles.tIsWindowed=refreshTimeCheckboxes(handles.timeDomain);
+    handles.timeDomain.Position=[0.05 0.525 0.45 0.4];
+    handles.timeLabel= uicontrol('Parent', handles.anaSelect,'Style','text', ...
+        'String','Time Domain Analysis', 'units', 'normalized');
+    handles.timeLabel.Position=[0.05 0.925 0.45 0.04];
+
+    %Frequency Domain list
+    handles.freqDomain=uicontrol('Parent', handles.anaSelect,'Style','listbox', 'units', 'normalized');
+    handles.fIsWindowed=refreshFreqCheckboxes(handles.freqDomain);
+    handles.freqDomain.Position=[0.05 0.05 0.45 0.4];
+    handles.freqLabel= uicontrol('Parent', handles.anaSelect,'Style','text', ...
+        'String','Frequency Domain Analysis', 'units', 'normalized');
+    handles.freqLabel.Position=[0.05 0.45 0.45 0.04];
+
+    handles.timeDomain.Callback={@timeListbox_Callback, handles};
+    handles.freqDomain.Callback={@freqListbox_Callback, handles};
+
+    handles.anaDetails.String=updateAnaDetails(handles);
+
+%%Prediction Selection Tab%%
+    %button group setup
+    handles.predictBtnGroup=uibuttongroup('Parent', handles.predictSelect,...
+                      'Title','Prediction Method',...
+                      'Position', [0.05 0.55 0.55 0.4], 'units', 'normalized');
+    handles.predictBtnGroup.SelectionChangedFcn={@predictBtnGroup_Change, handles};
+
+    %neural net radio button
+    handles.predictBtnNeural=uicontrol('Style', 'radiobutton',...
+                        'Parent', handles.predictBtnGroup,...
+                      'String','Neural Network',...
+                      'units', 'normalized');
+    handles.predictBtnNeural.Position= [0.05 0.9 0.55 0.08];
+    %GMM radio button
+    handles.predictBtnGMM=uicontrol('Style', 'radiobutton',...
+                        'Parent', handles.predictBtnGroup,...
+                      'String','Gaussian Mixture Model',...
+                      'units', 'normalized');
+    handles.predictBtnGMM.Position= [0.05 0.75 0.55 0.08];
+    %SVM radio button
+    handles.predictBtnSVM=uicontrol('Style', 'radiobutton',...
+                        'Parent', handles.predictBtnGroup,...
+                      'String','Support Vector Machines',...
+                      'units', 'normalized');
+    handles.predictBtnSVM.Position= [0.05 0.6 0.55 0.08];
+    %HMM radio button
+    handles.predictBtnHMM=uicontrol('Style', 'radiobutton',...
+                        'Parent', handles.predictBtnGroup,...
+                      'String','Hidden Markov Model',...
+                      'units', 'normalized');
+    handles.predictBtnHMM.Position= [0.05 0.45 0.55 0.08];
+    
+    
+    %Prepare features button
+    handles.prepareFeat = uicontrol('Parent', handles.predictSelect, 'Style', 'pushbutton', 'String', 'Prepare Data', 'units', 'normalized'); 
+    handles.prepareFeat.Callback= {@prepareFeatures_Callback, handles};
+    handles.prepareFeat.Position= [0.05 0.45 0.55 0.08];
+
 
 
 % Choose default command line output for phonifyze
 handles.output = hObject;
-
 % Update handles structure
 guidata(hObject, handles);
 
@@ -108,3 +174,32 @@ refreshPhonemeTable(handles.phonemeSelect);
 handles.corpusSelect.Position=[0.05 0.55 0.55 0.4];
 handles.phonemeSelect.Position=[0.1 0.25 0.45 0.2];
 
+function timeListbox_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+handles.anaDetails.String=updateAnaDetails(handles);
+
+
+
+function freqListbox_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.anaDetails.String=updateAnaDetails(handles);
+
+
+function predictBtnGroup_Change(hObject, eventdata, handles)
+% hObject    handle to pushbutton2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+function prepareFeatures_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.prepareFeat.Enable='off';
+prepareData(handles);
+handles.prepareFeat.Enable='on';
