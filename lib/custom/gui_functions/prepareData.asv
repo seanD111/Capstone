@@ -8,9 +8,9 @@ FDomainAnas={'Power Spectrogram'; 'Formant Ratios';'IPA Coherences';...
 
 TDomainAnas={'Mean';  'RMS Power'; 'Pitch Period'; 'IPA Cross-Correlation'};
 
-%windowsize in ms
-windowSize=25;
-hoptime=10;
+%windowsize in ss
+    wintime = 0.025;
+    steptime = 0.010;
 
 rowsSelected=handles.corpusSelect.Data(:, 2)
 allSelectedClips=cell(2,10000);
@@ -43,6 +43,7 @@ uniqueSelectedLangs=allSelLangs(2:end);
 
 
 selectedFeature=cell(16,2);
+windowed_colEnd=1;
 
 for i=1:length(uniqueSelectedClips)
     fInd=1;
@@ -60,7 +61,14 @@ for i=1:length(uniqueSelectedClips)
         
         [bothChannels,sr] = audioread(uniqueSelectedClips{1, i});
          d=((bothChannels(:,1)+bothChannels(:,2))/2)';
-         d=d(1, 1:500000);
+         
+         if (length(d)>500000)
+             d=d(1, 1:500000);
+         end
+
+
+
+    
 
 
 
@@ -91,13 +99,23 @@ for i=1:length(uniqueSelectedClips)
         %fInd=fInd+1;
     end
     
+    %calculating the number of frames;for windowed analysis
+    winpts = round(wintime*sr);
+    steppts = round(steptime*sr);
+  
+    WINDOW = [hanning(winpts)'];
+    % hanning gives much less noisy sidelobes
+    NOVERLAP = winpts - steppts;
+    [~, numFrames]=size(enframe(d, WINDOW,steppts));
+    
+    
     %%Frequency Analysis
     if(any(handles.freqDomain.Value==1))
         selectedFeature{fInd,1}=FDomainAnas{1,1};
         selectedFeature{fInd,2}=windowed_rowInd;
         tempPowSpec=powspec(d, sr);
         [numRows, ~]=size(tempPowSpec);
-        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=tempPowSpec;
+        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), windowed_colEnd:numFrames)=tempPowSpec;
         windowed_rowInd=windowed_rowInd+numRows;
         fInd=fInd+1;
     end
@@ -131,7 +149,7 @@ for i=1:length(uniqueSelectedClips)
         fInd=fInd+1;
     end
     if(any(handles.freqDomain.Value==6))
-        selectedFeature{fInd,1}=FDomainAnas{5,1};
+        selectedFeature{fInd,1}=FDomainAnas{6,1};
         selectedFeature{fInd,2}=windowed_rowInd;
         tempMFCCs = melfcc(d*3.3752, sr);
         tempDMFCCs=deltas(tempMFCCs);
@@ -141,7 +159,8 @@ for i=1:length(uniqueSelectedClips)
         fInd=fInd+1;
     end
     if(any(handles.freqDomain.Value==7))
-        selectedFeature{fInd,1}=FDomainAnas{5,1};
+        selectedFeature{fInd,1}=FDomainAnas{7,1};
+        selectedFeature{fInd,2}=windowed_rowInd;
         tempMFCCs = melfcc(d*3.3752, sr);
         tempDDMFCCs=deltas(deltas(tempMFCCs,5),5);
         [numRows, ~]=size(tempDMFCCs);
@@ -151,7 +170,8 @@ for i=1:length(uniqueSelectedClips)
     end
     if(any(handles.freqDomain.Value==8))
             if(any(handles.freqDomain.Value==9))
-                selectedFeature{fInd,1}=FDomainAnas{5,1};
+                selectedFeature{fInd,1}=FDomainAnas{9,1};
+                selectedFeature{fInd,2}=windowed_rowInd;
                 tempPLPs = rastaplp(d, sr);
                 [numRows, ~]=size(tempPLPs);
                 windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=tempPLPs;
@@ -159,7 +179,8 @@ for i=1:length(uniqueSelectedClips)
                 fInd=fInd+1;
             end
             if(any(handles.freqDomain.Value==10))
-                selectedFeature{fInd,1}=FDomainAnas{5,1};
+                selectedFeature{fInd,1}=FDomainAnas{10,1};
+                selectedFeature{fInd,2}=windowed_rowInd;
                 tempPLPs = rastaplp(d, sr);
                 del = deltas(tempPLPs);
                 [numRows, ~]=size(del);
@@ -168,7 +189,8 @@ for i=1:length(uniqueSelectedClips)
                 fInd=fInd+1;
             end
             if(any(handles.freqDomain.Value==11))
-                selectedFeature{fInd,1}=FDomainAnas{5,1};
+                selectedFeature{fInd,1}=FDomainAnas{11,1};
+                selectedFeature{fInd,2}=windowed_rowInd;
                 tempPLPs = rastaplp(d, sr);
                 ddel = deltas(deltas(tempPLPs,5),5);
                 [numRows, ~]=size(ddel);
@@ -178,7 +200,8 @@ for i=1:length(uniqueSelectedClips)
             end        
     else
             if(any(handles.freqDomain.Value==9))
-                selectedFeature{fInd,1}=FDomainAnas{5,1};
+                selectedFeature{fInd,1}=FDomainAnas{9,1};
+                selectedFeature{fInd,2}=windowed_rowInd;
                 tempPLPs = rastaplp(d, sr, 0, 12);
                 [numRows, ~]=size(tempPLPs);
                 windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=tempPLPs;
@@ -186,7 +209,8 @@ for i=1:length(uniqueSelectedClips)
                 fInd=fInd+1;
             end
             if(any(handles.freqDomain.Value==10))
-                selectedFeature{fInd,1}=FDomainAnas{5,1};
+                selectedFeature{fInd,1}=FDomainAnas{10,1};
+                selectedFeature{fInd,2}=windowed_rowInd;
                 tempPLPs = rastaplp(d, sr, 0, 12);
                 del = deltas(tempPLPs);
                 [numRows, ~]=size(del);
@@ -195,7 +219,8 @@ for i=1:length(uniqueSelectedClips)
                 fInd=fInd+1;
             end
             if(any(handles.freqDomain.Value==11))
-                selectedFeature{fInd,1}=FDomainAnas{5,1};
+                selectedFeature{fInd,1}=FDomainAnas{11,1};
+                selectedFeature{fInd,2}=windowed_rowInd;
                 tempPLPs = rastaplp(d, sr, 0, 12);
                 ddel = deltas(deltas(tempPLPs,5),5);
                 [numRows, ~]=size(ddel);
@@ -203,13 +228,16 @@ for i=1:length(uniqueSelectedClips)
                 windowed_rowInd=windowed_rowInd+numRows;
                 fInd=fInd+1;
             end
-    end
+            
+    end 
     
+        
+    windowed_colEnd=window_colEnd+numFrames;
     catch err
-        err
+        err.stack
     end
 
 
 end
-languageTargets
+
 selectedFeature

@@ -8,9 +8,9 @@ FDomainAnas={'Power Spectrogram'; 'Formant Ratios';'IPA Coherences';...
 
 TDomainAnas={'Mean';  'RMS Power'; 'Pitch Period'; 'IPA Cross-Correlation'};
 
-%windowsize in ms
-windowSize=25;
-hoptime=10;
+%windowsize in ss
+    wintime = 0.025;
+    steptime = 0.010;
 
 rowsSelected=handles.corpusSelect.Data(:, 2)
 allSelectedClips=cell(2,10000);
@@ -43,6 +43,7 @@ uniqueSelectedLangs=allSelLangs(2:end);
 
 
 selectedFeature=cell(16,2);
+windowed_colEnd=1;
 
 for i=1:length(uniqueSelectedClips)
     fInd=1;
@@ -60,7 +61,14 @@ for i=1:length(uniqueSelectedClips)
         
         [bothChannels,sr] = audioread(uniqueSelectedClips{1, i});
          d=((bothChannels(:,1)+bothChannels(:,2))/2)';
-         d=d(1, 1:500000);
+         
+         if (length(d)>500000)
+             d=d(1, 1:500000);
+         end
+
+
+
+    
 
 
 
@@ -91,13 +99,23 @@ for i=1:length(uniqueSelectedClips)
         %fInd=fInd+1;
     end
     
+    %calculating the number of frames;for windowed analysis
+    winpts = round(wintime*sr);
+    steppts = round(steptime*sr);
+  
+    WINDOW = [hanning(winpts)'];
+    % hanning gives much less noisy sidelobes
+    NOVERLAP = winpts - steppts;
+    [numFrames, ~]=size(enframe(d, WINDOW,steppts));
+    
+    
     %%Frequency Analysis
     if(any(handles.freqDomain.Value==1))
         selectedFeature{fInd,1}=FDomainAnas{1,1};
         selectedFeature{fInd,2}=windowed_rowInd;
         tempPowSpec=powspec(d, sr);
         [numRows, ~]=size(tempPowSpec);
-        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=tempPowSpec;
+        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), windowed_colEnd:(windowed_colEnd+numFrames-1))=tempPowSpec;
         windowed_rowInd=windowed_rowInd+numRows;
         fInd=fInd+1;
     end
@@ -106,7 +124,7 @@ for i=1:length(uniqueSelectedClips)
         selectedFeature{fInd,2}=windowed_rowInd;
         tempFormants=formants(d, sr);
         [numRows, ~]=size(tempFormants);
-        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=tempFormants;
+        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), windowed_colEnd:(windowed_colEnd+numFrames-1))=tempFormants;
 %         windowed_languageInputs(windowed_rowInd+numRows, :)=tempFormPow;
         windowed_rowInd=windowed_rowInd+numRows;
         fInd=fInd+1;
@@ -126,7 +144,7 @@ for i=1:length(uniqueSelectedClips)
         selectedFeature{fInd,2}=windowed_rowInd;
         tempMFCCs = melfcc(d*3.3752, sr);
         [numRows, ~]=size(tempMFCCs);
-        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=tempMFCCs;
+        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), windowed_colEnd:(windowed_colEnd+numFrames-1))=tempMFCCs;
         windowed_rowInd=windowed_rowInd+numRows;
         fInd=fInd+1;
     end
@@ -136,7 +154,7 @@ for i=1:length(uniqueSelectedClips)
         tempMFCCs = melfcc(d*3.3752, sr);
         tempDMFCCs=deltas(tempMFCCs);
         [numRows, ~]=size(tempDMFCCs);
-        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=tempDMFCCs;
+        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), windowed_colEnd:(windowed_colEnd+numFrames-1))=tempDMFCCs;
         windowed_rowInd=windowed_rowInd+numRows;
         fInd=fInd+1;
     end
@@ -146,7 +164,7 @@ for i=1:length(uniqueSelectedClips)
         tempMFCCs = melfcc(d*3.3752, sr);
         tempDDMFCCs=deltas(deltas(tempMFCCs,5),5);
         [numRows, ~]=size(tempDMFCCs);
-        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=tempDDMFCCs;
+        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), windowed_colEnd:(windowed_colEnd+numFrames-1))=tempDDMFCCs;
         windowed_rowInd=windowed_rowInd+numRows;
         fInd=fInd+1;
     end
@@ -156,7 +174,7 @@ for i=1:length(uniqueSelectedClips)
                 selectedFeature{fInd,2}=windowed_rowInd;
                 tempPLPs = rastaplp(d, sr);
                 [numRows, ~]=size(tempPLPs);
-                windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=tempPLPs;
+                windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), windowed_colEnd:(windowed_colEnd+numFrames-1))=tempPLPs;
                 windowed_rowInd=windowed_rowInd+numRows;
                 fInd=fInd+1;
             end
@@ -166,7 +184,7 @@ for i=1:length(uniqueSelectedClips)
                 tempPLPs = rastaplp(d, sr);
                 del = deltas(tempPLPs);
                 [numRows, ~]=size(del);
-                windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=del;
+                windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), windowed_colEnd:(windowed_colEnd+numFrames-1))=del;
                 windowed_rowInd=windowed_rowInd+numRows;
                 fInd=fInd+1;
             end
@@ -176,7 +194,7 @@ for i=1:length(uniqueSelectedClips)
                 tempPLPs = rastaplp(d, sr);
                 ddel = deltas(deltas(tempPLPs,5),5);
                 [numRows, ~]=size(ddel);
-                windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=ddel;
+                windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), windowed_colEnd:(windowed_colEnd+numFrames-1))=ddel;
                 windowed_rowInd=windowed_rowInd+numRows;
                 fInd=fInd+1;
             end        
@@ -186,7 +204,7 @@ for i=1:length(uniqueSelectedClips)
                 selectedFeature{fInd,2}=windowed_rowInd;
                 tempPLPs = rastaplp(d, sr, 0, 12);
                 [numRows, ~]=size(tempPLPs);
-                windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=tempPLPs;
+                windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), windowed_colEnd:(windowed_colEnd+numFrames-1))=tempPLPs;
                 windowed_rowInd=windowed_rowInd+numRows;
                 fInd=fInd+1;
             end
@@ -196,7 +214,7 @@ for i=1:length(uniqueSelectedClips)
                 tempPLPs = rastaplp(d, sr, 0, 12);
                 del = deltas(tempPLPs);
                 [numRows, ~]=size(del);
-                windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=del;
+                windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), windowed_colEnd:(windowed_colEnd+numFrames-1))=del;
                 windowed_rowInd=windowed_rowInd+numRows;
                 fInd=fInd+1;
             end
@@ -206,14 +224,17 @@ for i=1:length(uniqueSelectedClips)
                 tempPLPs = rastaplp(d, sr, 0, 12);
                 ddel = deltas(deltas(tempPLPs,5),5);
                 [numRows, ~]=size(ddel);
-                windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=ddel;
+                windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), windowed_colEnd:(windowed_colEnd+numFrames-1))=ddel;
                 windowed_rowInd=windowed_rowInd+numRows;
                 fInd=fInd+1;
             end
-    end
+            
+    end 
     
+        
+    windowed_colEnd=window_colEnd+numFrames;
     catch err
-        err.stack
+        err.stack.line
     end
 
 
