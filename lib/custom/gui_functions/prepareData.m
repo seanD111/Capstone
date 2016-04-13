@@ -6,7 +6,7 @@ FDomainAnas={'Power Spectrogram'; 'Formant Ratios';'IPA Coherences';...
     'Delta-MFCCs';'Delta-Delta-MFCCs'; ...
     'Use RASTA filtering on the following:'; 'PLPs'; 'Delta-PLPs';'Delta-Delta-PLPs' };
 
-TDomainAnas={'Mean'; 'Variance'; 'RMS Power'; 'Pitch Period'; 'IPA Cross-Correlation'};
+TDomainAnas={'Mean';  'RMS Power'; 'Pitch Period'; 'IPA Cross-Correlation'};
 
 %windowsize in ms
 windowSize=25;
@@ -43,10 +43,12 @@ uniqueSelectedLangs=allSelLangs(2:end);
 
 
 selectedFeature=cell(16,1);
-fInd=1;
-full_rowInd=1;
-windowed_rowInd=1;
+
 for i=1:length(uniqueSelectedClips)
+    fInd=1;
+    full_rowInd=1;
+    windowed_rowInd=1;
+    
     allLangs=handles.allLanguages;
     for h=1:length(allLangs)
         languageTargets(h,i)=strcmp(uniqueSelectedLangs{1,i}, allLangs{1,h});          
@@ -56,8 +58,10 @@ for i=1:length(uniqueSelectedClips)
     %%Get SoundClip
     try
         
-        [d,sr] = audioread(uniqueSelectedClips{1, i});
-            d
+        [bothChannels,sr] = audioread(uniqueSelectedClips{1, i});
+         d=((bothChannels(:,1)+bothChannels(:,2))/2)';
+         d=d(1, 1:500000);
+
 
 
     %%Time Domain Analysis%%
@@ -69,23 +73,17 @@ for i=1:length(uniqueSelectedClips)
     end
     if(any(handles.timeDomain.Value==2))
         selectedFeature{fInd,1}=TDomainAnas{2,1};
-        full_languageInputs(full_rowInd, i)=std(d);
+        full_languageInputs(full_rowInd, i)=rms(d);
         full_rowInd=full_rowInd+1;
         fInd=fInd+1;
     end
     if(any(handles.timeDomain.Value==3))
         selectedFeature{fInd,1}=TDomainAnas{3,1};
-        full_languageInputs(full_rowInd, i)=rms(d);
-        full_rowInd=full_rowInd+1;
-        fInd=fInd+1;
-    end
-    if(any(handles.timeDomain.Value==4))
-        selectedFeature{fInd,1}=TDomainAnas{4,1};
         full_languageInputs(full_rowInd, i)=pitchperiod(d, sr);
         full_rowInd=full_rowInd+1;
         fInd=fInd+1;
     end
-    if(any(handles.timeDomain.Value==5))
+    if(any(handles.timeDomain.Value==4))
         %selectedFeature{fInd,1}=TDomainAnas{5,1};
         %fInd=fInd+1;
     end
@@ -95,17 +93,17 @@ for i=1:length(uniqueSelectedClips)
         selectedFeature{fInd,1}=FDomainAnas{1,1};
         tempPowSpec=powspec(d, sr);
         [numRows, ~]=size(tempPowSpec);
-        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows), :)=tempPowSpec;
+        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=tempPowSpec;
         windowed_rowInd=windowed_rowInd+numRows;
         fInd=fInd+1;
     end
     if(any(handles.freqDomain.Value==2))
         selectedFeature{fInd,1}=FDomainAnas{2,1};
-        [tempFormants, ~, tempFormPow]=formants(d, sr);
-        [numRows, ~]=size(tempPowSpec);
-        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows), :)=tempFormants;
-        windowed_languageInputs(windowed_rowInd+numRows+1, :)=tempFormPow;
-        windowed_rowInd=windowed_rowInd+numRows+1;
+        tempFormants=formants(d, sr);
+        [numRows, ~]=size(tempFormants);
+        windowed_languageInputs(windowed_rowInd:(windowed_rowInd+numRows-1), :)=tempFormants;
+%         windowed_languageInputs(windowed_rowInd+numRows, :)=tempFormPow;
+        windowed_rowInd=windowed_rowInd+numRows;
         fInd=fInd+1;
     end
     if(any(handles.freqDomain.Value==3))
@@ -160,7 +158,7 @@ for i=1:length(uniqueSelectedClips)
     catch err
         err
     end
-fInd=1;
+
 
 end
 languageTargets
