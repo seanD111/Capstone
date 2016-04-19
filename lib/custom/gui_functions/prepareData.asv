@@ -52,7 +52,7 @@ for i=1:length(uniqueSelectedClips)
     
     allLangs=handles.allLanguages;
     for h=1:length(allLangs)
-        full_languageTargets(h,i)=strcmp(uniqueSelectedLangs{1,i}, allLangs{1,h});          
+        languageTargets(h,i)=strcmp(uniqueSelectedLangs{1,i}, allLangs{1,h});          
        
     end
 
@@ -237,8 +237,8 @@ for i=1:length(uniqueSelectedClips)
     end 
     
     for h=1:length(allLangs)
-
-        windowed_languageTargets(h,windowed_colEnd:(windowed_colEnd+numFrames-1))=strcmp(uniqueSelectedLangs{1,i}, allLangs{1,h});          
+        for 
+        languageTargets(h,i)=strcmp(uniqueSelectedLangs{1,i}, allLangs{1,h});          
        
     end
     windowed_colEnd=windowed_colEnd+numFrames;

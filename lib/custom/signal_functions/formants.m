@@ -23,6 +23,9 @@ function [ formants] = formants( full_signal, sr )
         x1=signal(i, :);
         x1 = filter(1,preemph,x1);
         A = lpc(x1,8);
+        if ~all(isfinite(A))
+            formants(1:3,i)=zeros(3,1);            
+        else
         rts = roots(A);
         rts = rts(imag(rts)>=0);
         angz = atan2(imag(rts),real(rts));
@@ -33,7 +36,10 @@ function [ formants] = formants( full_signal, sr )
             if (frqs(kk) > 90 && bw(kk) <400)
                 formants(nn, i) = frqs(kk);
                 nn = nn+1;
+            else
+                formants(nn, i) = 0;
             end
+        end
         end
 
 
