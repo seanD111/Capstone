@@ -57,7 +57,7 @@ for i=1:length(uniqueSelectedClips)
     end
 
     %%Get SoundClip
-   % try
+   try
         
         [bothChannels,sr] = audioread(uniqueSelectedClips{1, i});
         [~, numChannels]=size(bothChannels);
@@ -173,7 +173,10 @@ for i=1:length(uniqueSelectedClips)
         windowed_rowInd=windowed_rowInd+numRows;
         fInd=fInd+1;
     end
-    if(any(handles.freqDomain.Value==8))
+    if(any(handles.freqDomain.Value==8))        
+                selectedFeature{fInd,1}=FDomainAnas{8,1};
+                selectedFeature{fInd,2}=windowed_rowInd;
+                fInd=fInd+1;
             if(any(handles.freqDomain.Value==9))
                 selectedFeature{fInd,1}=FDomainAnas{9,1};
                 selectedFeature{fInd,2}=windowed_rowInd;
@@ -242,12 +245,18 @@ for i=1:length(uniqueSelectedClips)
        
     end
     windowed_colEnd=windowed_colEnd+numFrames;
-%     catch err
-%         'error:'
-%         err.stack.line
-%     end
+    catch err
+        allerrs=getAllFiles('errors/');
+        [tempsize, ~]=size(allerrs)
+        save(strcat('errors/error', num2str(tempsize), '.mat'), 'err')
+    end
 
 
 end
 
-selectedFeature
+
+processedFiles=getAllFiles('data/processed/');
+[tempsize, ~]=size(processedFiles)
+save(strcat('data/processed/configuration', num2str(tempsize), '.mat'), 'selectedFeature', 'windowed_languageTargets',...
+    'windowed_languageInputs','full_languageTargets', 'full_languageInputs', 'allLangs')
+
