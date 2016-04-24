@@ -9,13 +9,14 @@ io.on('connection', function(socket) {
 		socket.emit('latestPredict', lastPredict);
 
 
-        fs.watch('data', function(event, filename) {
-            fs.readFile('data/' + filename, function(err, data) {
+        fs.watch('matlab_node', function(event, filename) {
+            fs.readFile('matlab_node/' + filename, function(err, data) {
                 if (!err) {
                     try {
                        
                         var x = JSON.parse(data);
                         lastPredict=x;
+                        console.log(x)
                         socket.emit('updated', x);
 
                     } catch (e) {

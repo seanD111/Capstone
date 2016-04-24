@@ -1,6 +1,7 @@
 var socket = io.connect('localhost:3000');
-socket.on('lastPredict', function(data){
+socket.on('latestPredict', function(data){
 	updatePie(data);
+	console.log(data)
 });
 
 socket.on('updated', function(data) {
@@ -18,9 +19,10 @@ function updatePie(newData){
 
 
 	pie.updateProp("data.content", data);
+	console.log(pie)
 }
 
-console.log(pie)
+
 
 
 

@@ -1,3 +1,5 @@
+var piewidth=document.getElementById("pieChart").clientWidth; 
+var pieheight=document.getElementById("pieChart").clientHeight; 
 var pie = new d3pie("pieChart", {
 	"header": {
 		"title": {
@@ -20,11 +22,16 @@ var pie = new d3pie("pieChart", {
 		"location": "bottom-left"
 	},
 	"size": {
-		"canvasWidth": 590,
+		"canvasWidth": piewidth,
+		"canvasHeight": pieheight,
 		"pieInnerRadius": "20%",
 		"pieOuterRadius": "90%"
 	},
 	"data": {
+		"smallSegmentGrouping": {
+			"enabled": true,
+			"value": 2
+		},
 		"sortOrder": "value-desc",
 		"content": [
 			{
@@ -40,7 +47,7 @@ var pie = new d3pie("pieChart", {
 			"pieDistance": 12
 		},
 		"inner": {
-			"hideWhenLessThanPercentage": 3
+			"hideWhenLessThanPercentage": 2
 		},
 		"mainLabel": {
 			"fontSize": 11

@@ -14,7 +14,18 @@ body {
 .active {
     height: 100%;
 }
-
+.carousel-caption {
+  position: absolute;
+  right: 15%;
+  bottom: 20px;
+  left: 15%;
+  z-index: 10;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, .9);
+}
 .carousel-inner {
     height: 100%;
 }
@@ -38,6 +49,13 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
+}
+#pieChart{
+  width: 30%;
+  height: 90%;
+  position: absolute;
+  left: 65%;
+  top: 5%;
 }
 /* Background images are set within the HTML using inline CSS, not here */
 
