@@ -1,6 +1,6 @@
 var piewidth=document.getElementById("pieChart").clientWidth; 
 var pieheight=document.getElementById("pieChart").clientHeight; 
-var pie = new d3pie("pieChart", {
+var pie= {
 	"header": {
 		"title": {
 			"text": "Language Probabilities",
@@ -80,4 +80,5 @@ var pie = new d3pie("pieChart", {
 			"percentage": 100
 		}
 	}
-});
+}
+// var pie = new d3pie("pieChart", );
