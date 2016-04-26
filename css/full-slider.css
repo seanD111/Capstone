@@ -51,10 +51,17 @@ body {
   top: 50%;
 }
 #pieChart{
-  width: 30%;
+  width: 90%;
   height: 90%;
   position: absolute;
-  left: 65%;
+  left: 5%;
+  top: 5%;
+}
+#langChords{
+  width: 50%;
+  height: 90%;
+  position: absolute;
+  left: 5%;
   top: 5%;
 }
 /* Background images are set within the HTML using inline CSS, not here */
