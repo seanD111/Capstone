@@ -1,5 +1,5 @@
 screenH=$("#myCarousel").height();
-screenW=$("#myCarousel").width();
+screenW=$("#myCarousel").width()*0.4;
 var selectedNodes=[];
 var diameter = Math.min(screenW, screenH)+100;
 
@@ -10,16 +10,27 @@ var tree = d3.layout.tree()
 var diagonal = d3.svg.diagonal.radial()
     .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 
-var svgLinks = d3.select("#edpSlide").append("svg")
+var svg= d3.select("#edpSlide").append("svg")
     .attr("width", diameter)
     .attr("height", diameter)
     .style({display: 'block' , margin: 'auto'})
+  .append('g')
+    .call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
+    .append('g');
 
+svg.append("rect")
+    .attr("class", "overlay")
+    .attr("width", diameter)
+    .attr("height", diameter);
+    
+var svgLinks = svg
   .append("g")
     .attr('class', 'linkGroup')
     .attr("transform", "translate(" + diameter / 2 + "," + diameter / 3 + ")");
 
-var svgNodes = d3.select("body").select("svg")
+
+
+var svgNodes = svg
   .append("g")
     .attr('class', 'nodeGroup')
     .attr("transform", "translate(" + diameter / 2 + "," + diameter / 3 + ")");
@@ -118,7 +129,7 @@ d3.json("data/json/combined.json", function(error, root) {
       .attr("dy", ".31em")
       .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
       .attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
-      .attr("font-size", screenW/300)
+      .attr("font-size", screenW/100)
       .text(function(d) { 
 		if(d.depth==0){return}
 		return d.name; 
@@ -165,5 +176,8 @@ function findShortRoute(){
 
       d3.selectAll('.distText').text('Distance: '+route.distance)
 }
+function zoom() {
 
+  svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
 d3.select(self.frameElement).style("height", diameter - 150 + "px");

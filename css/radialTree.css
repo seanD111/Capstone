@@ -2,6 +2,12 @@
 .nodeText {
 
     font-size: 10px;
+      -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;       
 
 }
 .node circle {
@@ -14,14 +20,33 @@
   fill: #fff;
   stroke: #00FF66;
   stroke-width: 1.7px;
+
+}
+.endnode text {
+    -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;       
 }
 .node {
   font: 12px sans-serif;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;       
 }
 
 .link {
   fill: none;
   stroke: #ccc;
   stroke-width: 1.5px;
+}
+.overlay {
+  fill: none;
+  pointer-events: all;
 }
 
