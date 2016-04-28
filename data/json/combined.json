@@ -1,0 +1,394 @@
+{
+	"name": "root",
+	"children": 
+	[	
+		{
+		  "name": "Afro-Siatic",
+		  "children": [
+		    {
+		      "name": "Central Semitic",
+		      "children": [
+			{
+			  "name": "Arabic names",
+			  "children": [
+			    {
+			      "name": "Arabic"
+			    }
+			  ]
+			},
+			{
+			  "name": "Northwest Semitic",
+			  "children": [
+			    {
+			      "name": "Canaanite",
+			      "children": [
+				{
+				  "name": "Hebrew"
+				}
+			      ]
+			    }
+			  ]
+			}
+		      ]
+		    },
+		    {
+		      "name": "Cushitic",
+		      "children": [
+			{
+			  "name": "Lowland East Cushitic",
+			  "children": [
+			    {
+			      "name": "Somali names",
+			      "children": [
+				{
+				  "name": "Somali"
+				}
+			      ]
+			    }
+			  ]
+			}
+		      ]
+		    }
+		  ]
+		},
+
+		{
+		  "name": "Austronesian",
+		  "children": [
+		    {
+		      "name": "Malayo-Polynesian",
+		      "children": [
+			{
+			  "name": "Central Phillipine",
+			  "children": [
+			    {
+			      "name": "Tagalog",
+			      "children": [
+				{
+				  "name": "Filipino"
+				}
+			      ]
+			    }
+			  ]
+			}
+		      ]
+		    }
+		  ]
+		},
+		{
+		  "name": "Austrosiatic",
+		  "children": [
+		    {
+		      "name": "Vietic",
+		      "children": [
+			{
+			  "name": "Viet-Muong",
+			  "children": [
+			    {
+			      "name": "Vietnamense"
+			    }
+			  ]
+			}
+		      ]
+		    }
+		  ]
+		},
+		{
+		  "name": "Dravidian",
+		  "children": [
+		    {
+		      "name": "Southern",
+		      "children": [
+			{
+			  "name": "Tamil-Kannada",
+			  "children": [
+			    {
+			      "name": "Tamil-Malayalam",
+			      "children": [
+				{
+				  "name": "Tamil names",
+				  "children": [
+				    {
+				      "name": "Tamil"
+				    }
+				  ]
+				}
+			      ]
+			    }
+			  ]
+			}
+		      ]
+		    }
+		  ]
+		},
+		{
+		  "name": "Indo-European",
+		  "children": [
+		    {
+		      "name": "Indo-Iranian",
+		      "children": [
+			{
+			  "name": "Indo-Aryan",
+			  "children": [
+			    {
+			      "name": "Northwestern",
+			      "children": [
+				{
+				  "name": "Punjabi"
+				}
+			      ]
+			    },
+			    {
+			      "name": "Central Zone (Hindi)",
+			      "children": [
+				{
+				  "name": "Western Hindi",
+				  "children": [
+				    {
+				      "name": "Hindustani",
+				      "children": [
+				        {
+				          "name": "Khariboli",
+				          "children": [
+				            {
+				              "name": "Urdu"
+				            },
+				            {
+				              "name": "Hindi"
+				            }
+				          ]
+				        }
+				      ]
+				    }
+				  ]
+				}
+			      ]
+			    }
+			  ]
+			},
+			{
+			  "name": "Iranian",
+			  "children": [
+			    {
+			      "name": "West Iranian",
+			      "children": [
+				{
+				  "name": "Southwestern Iranian",
+				  "children": [
+				    {
+				      "name": "Persian"
+				    }
+				  ]
+				}
+			      ]
+			    }
+			  ]
+			}
+		      ]
+		    },
+		    {
+		      "name": "Balto-Slavic",
+		      "children": [
+			{
+			  "name": "Slavic",
+			  "children": [
+			    {
+			      "name": "West Slavic",
+			      "children": [
+				{
+				  "name": "Lethitic",
+				  "children": [
+				    {
+				      "name": "Polish"
+				    }
+				  ]
+				}
+			      ]
+			    },
+			    {
+			      "name": "East Slavic",
+			      "children": [
+				{
+				  "name": "Russian"
+				},
+				{
+				  "name": "Ukranian"
+				}
+			      ]
+			    }
+			  ]
+			}
+		      ]
+		    },
+		    {
+		      "name": "Italic",
+		      "children": [
+			{
+			  "name": "Western Romance",
+			  "children": [
+			    {
+			      "name": "Gallo-Romance",
+			      "children": [
+				{
+				  "name": "Oïl",
+				  "children": [
+				    {
+				      "name": "French"
+				    }
+				  ]
+				}
+			      ]
+			    },
+			    {
+			      "name": "Ibero-Romance",
+			      "children": [
+				{
+				  "name": "Castilian",
+				  "children": [
+				    {
+				      "name": "Spanish"
+				    }
+				  ]
+				},
+				{
+				  "name": "Galician-Portugeuse",
+				  "children": [
+				    {
+				      "name": "Portugeuse"
+				    }
+				  ]
+				}
+			      ]
+			    }
+			  ]
+			},
+			{
+			  "name": "Italo-Dalmatian",
+			  "children": [
+			    {
+			      "name": "Tuscan",
+			      "children": [
+				{
+				  "name": "Italian"
+				}
+			      ]
+			    }
+			  ]
+			}
+		      ]
+		    },
+		    {
+		      "name": "Hellenic",
+		      "children": [
+			{
+			  "name": "Greek"
+			}
+		      ]
+		    },
+		    {
+		      "name": "Germanic",
+		      "children": [
+			{
+			  "name": "West Germanic",
+			  "children": [
+			    {
+			      "name": "German"
+			    },
+			    {
+			      "name": "Low Franconian (Frankish)",
+			      "children": [
+				{
+				  "name": "Dutch"
+				}
+			      ]
+			    },
+			    {
+			      "name": "Anglo-Frisian",
+			      "children": [
+				{
+				  "name": "Anglic",
+				  "children": [
+				    {
+				      "name": "English"
+				    }
+				  ]
+				}
+			      ]
+			    }
+			  ]
+			}
+		      ]
+		    }
+		  ]
+		},
+
+		{
+		  "name": "Koreanic",
+		  "children": [
+		    {
+		      "name": "Silian",
+		      "children": [
+			{
+			  "name": "Korean"
+			}
+		      ]
+		    }
+		  ]
+		},
+		{
+		  "name": "Sino-Tibetan ",
+		  "children": [
+		    {
+		      "name": "Sinitic",
+		      "children": [
+			{
+			  "name": "Chinese",
+			  "children": [
+			    {
+			      "name": "Mandarin"
+			    },
+			    {
+			      "name": "Yue",
+			      "children": [
+				{
+				  "name": "Yuehai",
+				  "children": [
+				    {
+				      "name": "Cantonese"
+				    }
+				  ]
+				}
+			      ]
+			    }
+			  ]
+			}
+		      ]
+		    }
+		  ]
+		},
+		{
+		  "name": "Uralic",
+		  "children": [
+		    {
+		      "name": "Finnic",
+		      "children": [
+			{
+			  "name": "Finnish"
+			},
+			{
+			  "name": "Estonian"
+			}
+		      ]
+		    },
+		    {
+		      "name": "Finno-Ugric",
+		      "children": [
+			{
+			  "name": "Hungarian"
+			}
+		      ]
+		    }
+		  ]
+		}
+	]
+}

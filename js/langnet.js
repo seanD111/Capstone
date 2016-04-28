@@ -28,7 +28,7 @@ function restart() {
 	if( d3.select("#graph") != null ) {
 		d3.select("#graph").remove();
 	}
-	w = document.getElementById("myCarousel").clientWidth*0.4;
+	w = document.getElementById("myCarousel").clientWidth*0.35;
 	h = document.getElementById("myCarousel").clientHeight;
 
 	$('#similarity').html(Math.round(similarityThreshold)+"%");
@@ -278,7 +278,7 @@ function drawChord() {
 	$("#hint").html("Move the mouse over any language to hide all others.");
 
 	// Chart dimensions.
-	var r1 = Math.min(w, h) / 2 - 4;
+	var r1 = Math.min(w, h) / 2 ;
 	var r0 = r1 - 100;
 
 	// The chord layout, for computing the angles of chords and groups.
@@ -301,7 +301,7 @@ function drawChord() {
 	.attr("height", h)
 			.call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
 	.append("g")
-		.attr("transform", "translate(" + (100+w/2) + "," + r1 + ")");
+		.attr("transform", "translate(" + (100+w/2) + "," + h/2.5 + ")");
 
 
 	// Add chords

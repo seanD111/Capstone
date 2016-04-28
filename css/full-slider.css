@@ -64,6 +64,13 @@ body {
   left: 5%;
   top: 5%;
 }
+#edpSlide{
+  width: 45%;
+  height: 90%;
+  position: absolute;
+  left: 50%;
+  top: 10%;
+}
 /* Background images are set within the HTML using inline CSS, not here */
 
 .fill {
